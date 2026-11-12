@@ -1,0 +1,68 @@
+[
+  {
+    "trainNumber": 27,
+    "trainType": "IC",
+    "trainCategory": "Long-distance",
+    "operatorShortCode": "vr",
+    "cancelled": false,
+    "timeTableRows": [
+      { "stationShortCode": "HKI", "type": "DEPARTURE", "scheduledTime": "2026-11-12T08:00:00.000Z", "actualTime": "2026-11-12T08:02:00.000Z", "differenceInMinutes": 2, "commercialTrack": "7", "cancelled": false },
+      { "stationShortCode": "TPE", "type": "ARRIVAL", "scheduledTime": "2026-11-12T09:35:00.000Z", "differenceInMinutes": 0, "commercialTrack": "3", "cancelled": false }
+    ]
+  },
+  {
+    "trainNumber": 123,
+    "trainType": "P",
+    "trainCategory": "Commuter",
+    "operatorShortCode": "vr",
+    "cancelled": false,
+    "timeTableRows": [
+      { "stationShortCode": "TKU", "type": "DEPARTURE", "scheduledTime": "2026-11-12T07:10:00.000Z", "actualTime": "2026-11-12T07:10:00.000Z", "differenceInMinutes": 0, "commercialTrack": "2", "cancelled": false },
+      { "stationShortCode": "HKI", "type": "ARRIVAL", "scheduledTime": "2026-11-12T08:55:00.000Z", "actualTime": "2026-11-12T08:55:00.000Z", "differenceInMinutes": 0, "commercialTrack": "4", "cancelled": false }
+    ]
+  },
+  {
+    "trainNumber": 55,
+    "trainType": "S",
+    "trainCategory": "Long-distance",
+    "operatorShortCode": "vr",
+    "cancelled": false,
+    "timeTableRows": [
+      { "stationShortCode": "HKI", "type": "DEPARTURE", "scheduledTime": "2026-11-12T09:10:00.000Z", "actualTime": "2026-11-12T09:10:00.000Z", "differenceInMinutes": 0, "commercialTrack": "9", "cancelled": false },
+      { "stationShortCode": "OUL", "type": "ARRIVAL", "scheduledTime": "2026-11-12T15:20:00.000Z", "differenceInMinutes": 0, "commercialTrack": "1", "cancelled": false }
+    ]
+  },
+  {
+    "trainNumber": 12,
+    "trainType": "IC",
+    "trainCategory": "Long-distance",
+    "operatorShortCode": "vr",
+    "cancelled": false,
+    "timeTableRows": [
+      { "stationShortCode": "TPE", "type": "DEPARTURE", "scheduledTime": "2026-11-12T07:45:00.000Z", "actualTime": "2026-11-12T07:50:00.000Z", "differenceInMinutes": 5, "commercialTrack": "1", "cancelled": false },
+      { "stationShortCode": "HKI", "type": "ARRIVAL", "scheduledTime": "2026-11-12T09:30:00.000Z", "actualTime": "2026-11-12T09:41:00.000Z", "differenceInMinutes": 11, "commercialTrack": "6", "cancelled": false }
+    ]
+  },
+  {
+    "trainNumber": 801,
+    "trainType": "R",
+    "trainCategory": "Commuter",
+    "operatorShortCode": "vr",
+    "cancelled": true,
+    "timeTableRows": [
+      { "stationShortCode": "HKI", "type": "DEPARTURE", "scheduledTime": "2026-11-12T09:45:00.000Z", "differenceInMinutes": 0, "commercialTrack": "5", "cancelled": true },
+      { "stationShortCode": "RI", "type": "ARRIVAL", "scheduledTime": "2026-11-12T10:30:00.000Z", "differenceInMinutes": 0, "commercialTrack": "2", "cancelled": true }
+    ]
+  },
+  {
+    "trainNumber": 49,
+    "trainType": "IC",
+    "trainCategory": "Long-distance",
+    "operatorShortCode": "vr",
+    "cancelled": false,
+    "timeTableRows": [
+      { "stationShortCode": "JNS", "type": "DEPARTURE", "scheduledTime": "2026-11-12T07:55:00.000Z", "actualTime": "2026-11-12T07:55:00.000Z", "differenceInMinutes": 0, "commercialTrack": "1", "cancelled": false },
+      { "stationShortCode": "HKI", "type": "ARRIVAL", "scheduledTime": "2026-11-12T10:05:00.000Z", "actualTime": "2026-11-12T10:04:00.000Z", "differenceInMinutes": -1, "commercialTrack": "8", "cancelled": false }
+    ]
+  }
+]     
