@@ -6,16 +6,17 @@ export function normalizeTrain(raw,station){
     return rows
         .filter((row)=> row.stationShortCode ===station)
         .map(row => ({
-            id : '${raw.trainNumber}-${row.type}-${row.scheduledTime}',
+            id : `${raw.trainNumber}-${row.type}-${row.scheduledTime}`,
             trainNumber : raw.trainNumber,
             trainType: raw.trainType,
             category : raw.trainCategory,
             operator : raw.operatorShortCode,
             kind: row.type.toLowerCase(),
+            station: row.stationShortCode,
             scheduledTime: row.scheduledTime,
             actualTime: row.actualTime ?? null,
             delayMin : row.differenceInMinutes ?? 0,
-            track: row.commericalTrack ?? "",
+            track: row.commercialTrack ?? "",
             cancelled : Boolean(raw.cancelled || row.cancelled),
 
         })

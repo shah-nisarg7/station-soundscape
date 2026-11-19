@@ -25,7 +25,7 @@ test("events come out in time order",()=>{
 test("cancelled train 801 is marked as cancelled",()=>{
     const events = normalizeTrains(sampleTrains,"HKI");
     assert.equal(findEventByTrainNumber(events,801).cancelled,true);
-    assert.equal(findEventByTrainNumber(events,801).cancelled,false);
+    assert.equal(findEventByTrainNumber(events,27).cancelled,false);
 });
 
 test("delay minutes are copied correctly (late and early)",()=>{
