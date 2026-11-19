@@ -50,3 +50,10 @@
     color:var(--muted);
 
 }
+
+.status--live{
+    color:#3fb950;
+}
+.status--offline{
+    color:#d29922;
+}
