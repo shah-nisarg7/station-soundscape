@@ -10,12 +10,12 @@ function getWantedModeFromUrl(){
 
 //shows live /offline on the page with the event count
 function showStatus(result){
-    const modeLabel = result.mode ==="live"?"LIVE":"OFFLINE (sample data)";
-    statusEl.textContent = `${modelLabel}:${result.events.length} events for ${STATION_CODE}`;
+    const modeLabel = result.mode ==="live"?"LIVE":"OFFLINE (fake trains)";
+    statusEl.textContent = `${modeLabel}:${result.events.length} events for ${STATION_CODE}`;
     statusEl.className = `status ${result.mode}`;
     if (result.reason){
         console.log("Why offline : ",result.reason);
-    }
+    }       
 }
 
 async function init(){
