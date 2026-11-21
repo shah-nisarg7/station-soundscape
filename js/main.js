@@ -1,5 +1,13 @@
 import { getTrainEvents } from "./data/dataSource.js";
+import {
+    startAudio,
+    pauseAudio,
+    isAudioRunning,
+    setVolume,
+} from "./audio/audioEngine.js";
 const statusEl = document.getElementById('status');
+const startButton = document.getElementById("start-button");
+const volumeSlider = document.getElementById("volume-slider");
 
 const STATION_CODE = "HKI";
 //opening the page with offline mode to test offline mode manually
@@ -32,4 +40,21 @@ async function init(){
         console.error(error);
     }
 }
+
+async function handleStartButtonClick(){
+    if (isAudioRunning()){
+        await pauseAudio();
+        startButton.textContent = "Start Sound";
+    }
+    else {
+        await startAudio();
+        startButton.textContent = "Pause sound";
+    }
+}
+//i kept volume range 0-1 so dividing it by 100 so it stays bw that range
+function handleVolumeChange(){
+    setVolume(Number(volumeSlider.value)/100);
+}
+startButton.addEventListener("click",handleStartButtonClick);
+volumeSlider.addEventListener("input",handleVolumeChange);
 init();   
