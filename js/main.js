@@ -6,7 +6,8 @@ import {
     setVolume,
     playNote,
 } from "./audio/audioEngine.js";
-import {getNoteFromScale,midiToFrequency} from "./audio/music.js";
+import { eventToFrequency } from "./audio/music.js";
+import { startPlayback } from "./audio/trainPlayer.js";
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
 const volumeSlider = document.getElementById("volume-slider");
@@ -35,6 +36,7 @@ async function init(){
             wantedMode: getWantedModeFromUrl(),
         });
         showStatus(result);
+        currentEvents = result.events;    
         console.table(result.events);
 
     } catch(error){
@@ -43,14 +45,26 @@ async function init(){
     }
 }
 
+// called once for every train event , show it and play tis note
+function handleTrainEvent(event){
+    const frequency = eventToFrequency(event);
+    if(frequency===null){
+        nowPlayingEl.textContent = `Train ${event.trainNumber} cancelled (silent)`;
+        return;
+    }
+    playNote(frequency);
+    nowPlayingEl.textContent = `Train ${event.trainNumber} ${event.kind},  track ${event.track}, ${event.delayMin} mins late`; 
+}
+
 async function handleStartButtonClick(){
-    if (isAudioRunning()){
+    if(isAudioRunning()){
+        if(stopTrainPlayback) stopTrainPlayback();
         await pauseAudio();
         startButton.textContent = "Start Sound";
-    }
-    else {
+    } else {
         await startAudio();
-        startButton.textContent = "Pause sound";
+        stopTrainPlayback = startPlayback(currentEvents,handleTrainEvent);
+        startButton.textContent= "Pause Sound";
     }
 }
 //i kept volume range 0-1 so dividing it by 100 so it stays bw that range
@@ -60,10 +74,11 @@ function handleVolumeChange(){
 startButton.addEventListener("click",handleStartButtonClick);
 volumeSlider.addEventListener("input",handleVolumeChange);
 
-//temp (clickign the canvas to hear a random note)
-document.getElementById("viz").addEventListener("click",()=>{
-    const randomStep = Math.floor(Math.random()*10);
-    const note = getNoteFromScale("majorPentatonic",randomStep);
-    playNote(midiToFrequency(note));
-});
+const nowPlayingEl = document.getElementById("now-playing");
+
+let currentEvents = []; //filled once data loads
+let stopTrainPlayback = null; //set while the music is playing
+
+
+
 init();
