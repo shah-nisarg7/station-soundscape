@@ -1,3 +1,4 @@
+import { playPadNote } from "./padSynth.js";
 //controls the browsers audio system (emppty till the user clicks start)
 let audioContext = null;
 let masterGain = null; //one common volume knob that all sounds will go thru
@@ -59,4 +60,9 @@ export function setVolume(value){
     if(masterGain!==null){
         masterGain.gain.setTargetAtTime(currentVolume,audioContext.currentTime,0.05);
     }
+}
+
+export function playNote(frequency){
+    if(!isAudioRunning()) return;
+    playPadNote(audioContext,masterGain,frequency);
 }

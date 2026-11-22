@@ -4,7 +4,9 @@ import {
     pauseAudio,
     isAudioRunning,
     setVolume,
+    playNote,
 } from "./audio/audioEngine.js";
+import {getNoteFromScale,midiToFrequency} from "./audio/music.js";
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
 const volumeSlider = document.getElementById("volume-slider");
@@ -57,4 +59,11 @@ function handleVolumeChange(){
 }
 startButton.addEventListener("click",handleStartButtonClick);
 volumeSlider.addEventListener("input",handleVolumeChange);
-init();   
+
+//temp (clickign the canvas to hear a random note)
+document.getElementById("viz").addEventListener("click",()=>{
+    const randomStep = Math.floor(Math.random()*10);
+    const note = getNoteFromScale("majorPentatonic",randomStep);
+    playNote(midiToFrequency(note));
+});
+init();
