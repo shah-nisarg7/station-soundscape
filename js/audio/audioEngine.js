@@ -1,9 +1,10 @@
 import { playPadNote } from "./padSynth.js";
+import { createEffects } from "./effects.js";
 //controls the browsers audio system (emppty till the user clicks start)
 let audioContext = null;
 let masterGain = null; //one common volume knob that all sounds will go thru
 let currentVolume = 0.5;
-
+let musicBus = null;
 //keeps volume bw 0-1 , any other value just becomes 0
 export function clampVolume(value){
     if (typeof value!=="number"|| Number.isNaN(value)) return 0;
@@ -37,7 +38,8 @@ export async function startAudio(){
         masterGain = audioContext.createGain();
         masterGain.gain.value = currentVolume;
         masterGain.connect(audioContext.destination);//basically audio goes to speakers
-            }
+        musicBus = createEffects(audioContext,masterGain).input;
+        }
 
     await audioContext.resume();
     playConfirmationBeep();
@@ -64,5 +66,5 @@ export function setVolume(value){
 
 export function playNote(frequency){
     if(!isAudioRunning()) return;
-    playPadNote(audioContext,masterGain,frequency);
+    playPadNote(audioContext, musicBus, frequency);
 }
