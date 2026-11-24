@@ -83,3 +83,12 @@
   gap: 0.5rem;
   color: var(--muted);
 }
+
+#viz {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  background: #010409;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+}

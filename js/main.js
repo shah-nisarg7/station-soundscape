@@ -7,6 +7,7 @@ import {
     playNote,
 } from "./audio/audioEngine.js";
 import { eventToFrequency } from "./audio/music.js";
+import { setupCanvas, drawStationRing } from "./viz/canvasView.js";
 import { startPlayback } from "./audio/trainPlayer.js";
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
@@ -80,5 +81,14 @@ let currentEvents = []; //filled once data loads
 let stopTrainPlayback = null; //set while the music is playing
 
 
+const canvasView = setupCanvas(document.getElementById("viz"));
+
+function redrawCanvas(){
+    drawStationRing(canvasView,STATION_CODE);
+}
+window.addEventListener("resize",()=>{
+    canvasView.resize();
+    redrawCanvas();
+});
 
 init();
