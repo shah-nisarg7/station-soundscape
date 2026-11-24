@@ -1,4 +1,5 @@
 import { getTrainEvents } from "./data/dataSource.js";
+import { setupCanvas, drawStationRing, drawParticles, drawRipples } from "./viz/canvasView.js";
 import {
     startAudio,
     pauseAudio,
@@ -6,8 +7,10 @@ import {
     setVolume,
     playNote,
 } from "./audio/audioEngine.js";
+import {createRipple, isRippleFinished} from "./viz/ripples.js";
 import { eventToFrequency } from "./audio/music.js";
-import { setupCanvas, drawStationRing } from "./viz/canvasView.js";
+import { createParticle, isParticleFinished } from "./viz/particles.js";
+import { TRACK_COUNT } from "./viz/layout.js";
 import { startPlayback } from "./audio/trainPlayer.js";
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
@@ -48,12 +51,14 @@ async function init(){
 
 // called once for every train event , show it and play tis note
 function handleTrainEvent(event){
+      activeParticles.push(createParticle(event, TRACK_COUNT, performance.now()));
     const frequency = eventToFrequency(event);
     if(frequency===null){
         nowPlayingEl.textContent = `Train ${event.trainNumber} cancelled (silent)`;
         return;
     }
     playNote(frequency);
+    activeRipples.push(createRipple(event, TRACK_COUNT, performance.now()));
     nowPlayingEl.textContent = `Train ${event.trainNumber} ${event.kind},  track ${event.track}, ${event.delayMin} mins late`; 
 }
 
@@ -79,7 +84,8 @@ const nowPlayingEl = document.getElementById("now-playing");
 
 let currentEvents = []; //filled once data loads
 let stopTrainPlayback = null; //set while the music is playing
-
+const activeParticles =[];
+const activeRipples = [];// rings that are spreading right now
 
 const canvasView = setupCanvas(document.getElementById("viz"));
 
@@ -87,8 +93,26 @@ function redrawCanvas(){
     drawStationRing(canvasView,STATION_CODE);
 }
 window.addEventListener("resize",()=>{
-    canvasView.resize();
-    redrawCanvas();
+    canvasView.resize();   
 });
 
+function removeFinishedItems(list,isFinished,now){
+    for(let index = list.length-1; index>=0;index--){
+        if(isFinished(list[index],now)){
+            list.splice(index,1);
+        }
+    }
+}
+function animationLoop(now){
+    removeFinishedItems(activeParticles,isParticleFinished,now);
+    removeFinishedItems(activeRipples,isRippleFinished,now);
+
+    drawStationRing(canvasView,STATION_CODE);
+    drawRipples(canvasView,activeRipples,now);
+    drawParticles(canvasView,activeParticles,now);
+    requestAnimationFrame(animationLoop)
+}
+
+window.addEventListener("resize",()=>canvasView.resize());
+requestAnimationFrame(animationLoop);
 init();

@@ -1,4 +1,14 @@
 import {TRACK_COUNT,getRingPositions} from "./layout.js";
+import {
+    getParticleProgress,
+    getParticleDistanceFactor,
+    getParticleAlpha,
+} from "./particles.js";
+import {
+    getRippleProgress,
+    getRippleRadius,
+    getRippleAlpha,
+} from "./ripples.js";
 //repeating our css colours here
 const COLORS = {
     ring:"#30363d",
@@ -27,14 +37,18 @@ export function setupCanvas(canvas){
         resize();
         return {context,size,resize};
 }
+
+function getRingShape(size){
+    return{
+        centerX : size.width/2,
+        centerY : size.height/2,
+        radius: Math.min(size.width,size.height)*0.35,    };
+}
 export function drawStationRing(view,stationCode){
     const {context,size}= view;
     context.clearRect(0,0,size.width,size.height);
 
-    const centerX = size.width/2;
-    const centerY = size.height/2;
-    const radius = Math.min(size.width,size.height)*0.35;
-
+    const { centerX, centerY, radius } = getRingShape(size);
     //the big ring line
     context.strokeStyle = COLORS.ring;
     context.linewidth = 2;
@@ -62,4 +76,44 @@ export function drawStationRing(view,stationCode){
     context.font = "bold 28px system-ui,sans-serif";
     context.fillStyle = COLORS.accent;
     context.fillText (stationCode,centerX,centerY);
+}
+
+export function drawParticles(view,particles,now){
+    const {context,size}= view;
+    const {centerX,centerY,radius} = getRingShape(size);
+    const dots = getRingPositions(TRACK_COUNT,centerX,centerY,radius);
+
+    for(const particle of particles){
+        const progress = getParticleProgress(particle,now);
+        const dot = dots[particle.trackIndex];
+        const factor = getParticleDistanceFactor(particle.kind,progress);
+        const x = centerX + (dot.x-centerX)*factor;
+        const y = centerY + (dot.y-centerY)*factor;
+
+        context.globalAlpha = getParticleAlpha(particle,progress);
+        context.fillStyle = particle.color;
+        context.beginPath();
+        context.arc(x,y,6,0,Math.PI*2);
+        context.fill();
+    }  
+    context.globalAlpha = 1; //back to normalf for other drawing
+}
+
+export function drawRipples(view, ripples, now) {
+  const { context, size } = view;
+  const { centerX, centerY, radius } = getRingShape(size);
+  const dots = getRingPositions(TRACK_COUNT, centerX, centerY, radius);
+
+  context.lineWidth = 2;
+  for (const ripple of ripples) {
+    const progress = getRippleProgress(ripple, now);
+    const dot = dots[ripple.trackIndex];
+
+    context.globalAlpha = getRippleAlpha(progress);
+    context.strokeStyle = ripple.color;
+    context.beginPath();
+    context.arc(dot.x, dot.y, getRippleRadius(progress), 0, Math.PI * 2);
+    context.stroke();
+  }
+  context.globalAlpha = 1; // back to normal for other drawing
 }
