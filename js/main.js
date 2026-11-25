@@ -69,7 +69,10 @@ async function handleStartButtonClick(){
         startButton.textContent = "Start Sound";
     } else {
         await startAudio();
-        stopTrainPlayback = startPlayback(currentEvents,handleTrainEvent);
+        stopTrainPlayback = startPlayback(currentEvents,handleTrainEvent,{
+            minGapSeconds : 1.5,
+            maxGapSeconds : 5,
+        });
         startButton.textContent= "Pause Sound";
     }
 }

@@ -6,6 +6,7 @@ export const SCALES = {
 
 const ROOT_NOTE = 48; // note 48 is the middle c (C3 note) on piano
 const LATE_LIMIT_MINUTES =5; //5 min or more counts as late
+const NOTES_USED =5; //only 5 diff notes (one actave) so jump stays small
 
 //midi note number will be sound freq in hz
 // note 69 is A at 440hz, every 12 notes up the freq doubles
@@ -31,7 +32,7 @@ export function getNoteFromScale(scaleName,stepNumber,rootNote= ROOT_NOTE){
 export function eventToFrequency(event,scaleName = "majorPentatonic"){
     if(event.cancelled) return null;
     const trackNumber = Number.parseInt(event.track,10);
-    const stepNumber = Number.isNaN(trackNumber)?0: trackNumber;
+    const stepNumber = Number.isNaN(trackNumber) ? 0 : trackNumber %NOTES_USED;
 
     let note = getNoteFromScale(scaleName,stepNumber);
     if(event.delayMin >= LATE_LIMIT_MINUTES){

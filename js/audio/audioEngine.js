@@ -1,5 +1,6 @@
-import { playPadNote } from "./padSynth.js";
-import { createEffects } from "./effects.js";
+import {playPadNote } from "./padSynth.js";
+import {createEffects } from "./effects.js";
+import {startDrone} from "./drone.js"; 
 //controls the browsers audio system (emppty till the user clicks start)
 let audioContext = null;
 let masterGain = null; //one common volume knob that all sounds will go thru
@@ -39,6 +40,7 @@ export async function startAudio(){
         masterGain.gain.value = currentVolume;
         masterGain.connect(audioContext.destination);//basically audio goes to speakers
         musicBus = createEffects(audioContext,masterGain).input;
+        startDrone(audioContext,musicBus); //goes thru reverb too
         }
 
     await audioContext.resume();

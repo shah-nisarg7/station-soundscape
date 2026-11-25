@@ -1,7 +1,7 @@
 //real trains are mins apart so.. we play it sped up
 //very long gaps are cut short, so it never waits too long for next note
 export function makePlaybackPlan(events,options={}){
-    const {secondsPerRealMinute =2 ,maxGapSeconds = 8} = options;
+    const {secondsPerRealMinute = 2, maxGapSeconds= 8,minGapSeconds = 0} = options;
 
     let previousTimeInMs = null;
     let elapsedSeconds = 0;
@@ -12,7 +12,7 @@ export function makePlaybackPlan(events,options={}){
         if (previousTimeInMs !== null){
             const realGapMinutes = (timeInMs - previousTimeInMs) / 60000;
             const gapSeconds = realGapMinutes * secondsPerRealMinute;
-            elapsedSeconds = elapsedSeconds+ Math.min(gapSeconds,maxGapSeconds);
+            elapsedSeconds += Math.min(Math.max(gapSeconds, minGapSeconds), maxGapSeconds);
         }
         previousTimeInMs = timeInMs;
         return {event,delaySeconds: elapsedSeconds};
