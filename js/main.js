@@ -8,15 +8,21 @@ import {
     playNote,
 } from "./audio/audioEngine.js";
 import {createRipple, isRippleFinished} from "./viz/ripples.js";
-import { eventToFrequency } from "./audio/music.js";
-import { createParticle, isParticleFinished } from "./viz/particles.js";
-import { TRACK_COUNT } from "./viz/layout.js";
-import { startPlayback } from "./audio/trainPlayer.js";
+import {eventToFrequency } from "./audio/music.js";
+import {createParticle, isParticleFinished } from "./viz/particles.js";
+import {TRACK_COUNT } from "./viz/layout.js";
+import {startPlayback } from "./audio/trainPlayer.js";
+import {getEventStats} from "./data/stats.js";
+
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
 const volumeSlider = document.getElementById("volume-slider");
 const stationSelect = document.getElementById("station-select");
 const scaleSelect = document.getElementById("scale-select");
+const hudModeEl = document.getElementById("hud-mode");
+const hudEventsEl = document.getElementById("hud-events");
+const hudDelayEl = document.getElementById("hud-delay");
+const hudProblemsEl = document.getElementById("hud-problems");
 
 let currentScale = "majorPentatonic";
 
@@ -33,8 +39,16 @@ function showStatus(result){
     statusEl.textContent = `${modeLabel}:${result.events.length} events for ${currentStation}`;
     statusEl.className = `status ${result.mode}`;
     if (result.reason){
-        console.log("Why offline : ",result.reason);
-    }       
+        console.log("Why offline : ",result.reason); }   
+    
+    //filling the stats panel
+    const stats = getEventStats(result.events);
+    hudModeEl.textContent= result.mode === "live"? "LIVE":"OFFLINE";
+    hudModeEl.className = `hud-value and hud-value ${result.mode}`;
+    hudEventsEl.textContent = stats.eventCount;
+    hudDelayEl.textContent = `${stats.averageDelayMin.toFixed(1)} min`;
+    hudProblemsEl.textContent =  `${stats.lateCount}/${stats.cancelledCount}`;
+
 }
 
 async function init(){

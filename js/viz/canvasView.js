@@ -92,11 +92,14 @@ export function drawParticles(view,particles,now){
 
         context.globalAlpha = getParticleAlpha(particle,progress);
         context.fillStyle = particle.color;
+        context.shadowColor = particle.color; //soft glow around the dot
+        context.shadowBlur = 12;    
         context.beginPath();
         context.arc(x,y,6,0,Math.PI*2);
         context.fill();
     }  
     context.globalAlpha = 1; //back to normalf for other drawing
+    context.shadowBlur = 0;//stop glow for next one
 }
 
 export function drawRipples(view, ripples, now) {
