@@ -34,9 +34,9 @@ export function createEffects(audioContext,destination){
     const echoDelay = audioContext.createDelay(2);
     echoDelay.delayTime.value = 0.45; //secs bw repeats
     const echoFeedback = audioContext.createGain();
-    echoFeedback.gain.value = 0.35;
+    echoFeedback.gain.value = 0.25;
     const echoGain = audioContext.createGain();
-    echoGain.gain.value = 0.3;
+    echoGain.gain.value = 0.2;
     input.connect(echoDelay);
     echoDelay.connect(echoFeedback);
     echoFeedback.connect(echoDelay); // loops the echo back into itself

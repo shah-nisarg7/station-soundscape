@@ -14,6 +14,7 @@ import {TRACK_COUNT } from "./viz/layout.js";
 import {startPlayback } from "./audio/trainPlayer.js";
 import {getEventStats} from "./data/stats.js";
 import{SONG_VOICE} from "./audio/padSynth.js";
+import {getStationSound} from "./audio/stationSounds.js";
 
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
@@ -72,12 +73,13 @@ async function init(){
 // called once for every train event , show it and play tis note
 function handleTrainEvent(event){
       activeParticles.push(createParticle(event, TRACK_COUNT, performance.now()));
-    const frequency = eventToFrequency(event,currentScale);
+    const stationSound =getStationSound(currentStation);
+    const frequency =eventToFrequency(event, currentScale, stationSound.rootNote);
     if(frequency===null){
         nowPlayingEl.textContent = `Train ${event.trainNumber} cancelled (silent)`;
         return;
     }
-    playNote(frequency, SONG_VOICE);
+    playNote(frequency, { ...SONG_VOICE, filterFrequency: stationSound.brightness });
     activeRipples.push(createRipple(event, TRACK_COUNT, performance.now()));
     nowPlayingEl.textContent = `Train ${event.trainNumber} ${event.kind},  track ${event.track}, ${event.delayMin} mins late`; 
 }
@@ -91,9 +93,9 @@ function startTrainMusic() {
     : {
         secondsPerRealMinute: 0.3, //1 real minute = 0.3 seconds of music
         minGapSeconds: 0.3,
-        maxGapSeconds: 1.2,
-        beatSeconds: 0.3, 
-        loopPauseSeconds: 2,
+        maxGapSeconds:1.2,
+        beatSeconds:0.3, 
+        loopPauseSeconds:2,
       };
 
   stopTrainPlayback =startPlayback(currentEvents,handleTrainEvent, timing);

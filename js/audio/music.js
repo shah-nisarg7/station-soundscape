@@ -29,7 +29,7 @@ export function getNoteFromScale(scaleName,stepNumber,rootNote= ROOT_NOTE){
 // track num picks the note (higher track = higher note)
 //late train sounds like low notes so dropping one octave
 
-export function eventToFrequency(event,scaleName = "majorPentatonic"){
+export function eventToFrequency(event,scaleName= "majorPentatonic", rootNote = MELODY_ROOT_NOTE){
     if(event.cancelled) return null;
     const trackNumber = Number.parseInt(event.track,10);
     const stepNumber =
@@ -37,7 +37,7 @@ export function eventToFrequency(event,scaleName = "majorPentatonic"){
       ? event.songStep
       : Number.isNaN(trackNumber)? 0 : trackNumber% NOTES_USED;
 
-    let note = getNoteFromScale(scaleName, stepNumber,MELODY_ROOT_NOTE);
+    let note = getNoteFromScale(scaleName, stepNumber,rootNote);
     if(event.delayMin >=LATE_LIMIT_MINUTES){
         note-=12;
     }
