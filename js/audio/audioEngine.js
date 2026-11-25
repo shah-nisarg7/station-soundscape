@@ -66,7 +66,7 @@ export function setVolume(value){
     }
 }
 
-export function playNote(frequency){
-    if(!isAudioRunning()) return;
-    playPadNote(audioContext, musicBus, frequency);
+export function playNote(frequency,voiceSettings) {
+  if (!isAudioRunning()) return;
+  playPadNote(audioContext,musicBus,frequency,voiceSettings);
 }

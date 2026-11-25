@@ -6,14 +6,21 @@ const SETTINGS = {
     peakVolume : 0.15,//keeping it low for now, will test
     filterFrequency: 2000, //sounds above this get softened
 }
+export const SONG_VOICE = {
+  attackSeconds: 0.03,
+  holdSeconds: 0.15,
+  releaseSeconds: 1.2,
+  peakVolume: 0.22,
+  filterFrequency: 2500,
+};
 export function getEnvelopeTimes(startTime,settings=SETTINGS){
     const peakTime = startTime + settings.attackSeconds;
     const releaseStartTime = peakTime + settings.holdSeconds;
     const endTime = releaseStartTime + settings.releaseSeconds;
     return {startTime,peakTime, releaseStartTime,endTime};
 }
-export function playPadNote(audioContext,destination,frequency){
-    const times = getEnvelopeTimes(audioContext.currentTime);
+export function playPadNote(audioContext, destination, frequency, settings = SETTINGS) {
+  const times = getEnvelopeTimes(audioContext.currentTime, settings);
     //i tried diff volume shapes then settled with 0 to peak to hold to 0 
     const noteGain = audioContext.createGain();
     noteGain.gain.linearRampToValueAtTime(SETTINGS.peakVolume, times.peakTime);

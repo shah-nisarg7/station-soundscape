@@ -1,6 +1,6 @@
 import { fetchLiveEvents } from "./liveApi.js";
 import { makeFakeEvents } from "./simulator.js";
-
+import { makeSongEvents} from "./song.js";
 //checking if there is net or no
 function browserSaysOffline(){
     return typeof navigator !=="undefined" && navigator.onLine ===false;   
@@ -16,8 +16,11 @@ export async function getTrainEvents(station="HKI", options={}){
         wantedMode  = "auto",
         getLiveEvents = fetchLiveEvents,
         getSampleEvents = makeOfflineEvents,
+        getSongEvents = (stationCode) =>makeSongEvents({station:stationCode }),
     } = options;
-
+    if(wantedMode==="song"){
+        return{events:getSongEvents(station),mode:"offline",reasonn:"Song mode"};
+    }
     if (wantedMode === "offline"){
         const events = await getSampleEvents(station);
         return {events, mode:"offline",reason: "offline mode was chosen"};

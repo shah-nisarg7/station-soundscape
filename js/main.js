@@ -13,6 +13,7 @@ import {createParticle, isParticleFinished } from "./viz/particles.js";
 import {TRACK_COUNT } from "./viz/layout.js";
 import {startPlayback } from "./audio/trainPlayer.js";
 import {getEventStats} from "./data/stats.js";
+import{SONG_VOICE} from "./audio/padSynth.js";
 
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
@@ -30,7 +31,8 @@ let currentStation = "HKI";
 //opening the page with offline mode to test offline mode manually
 function getWantedModeFromUrl(){
     const params = new URLSearchParams(window.location.search);
-    return params.get("mode")=== "offline"?"offline":"auto";
+    const modeFromUrl = params.get("mode");
+    return ["offline","song"].includes(modeFromUrl)? modeFromUrl: "auto";
 }  
 
 //shows live /offline on the page with the event count
@@ -75,7 +77,7 @@ function handleTrainEvent(event){
         nowPlayingEl.textContent = `Train ${event.trainNumber} cancelled (silent)`;
         return;
     }
-    playNote(frequency);
+    playNote(frequency, event.songStep === undefined ? undefined : SONG_VOICE);
     activeRipples.push(createRipple(event, TRACK_COUNT, performance.now()));
     nowPlayingEl.textContent = `Train ${event.trainNumber} ${event.kind},  track ${event.track}, ${event.delayMin} mins late`; 
 }
@@ -83,10 +85,12 @@ function handleTrainEvent(event){
 //starts the train music usingn current events
 function startTrainMusic() {
   if (stopTrainPlayback) stopTrainPlayback();
-  stopTrainPlayback = startPlayback(currentEvents, handleTrainEvent, {
-    minGapSeconds:1.5,
-    maxGapSeconds:5,
-  });
+  const isSong =currentEvents.length> 0 &&currentEvents[0].songStep !== undefined;
+  const timing = isSong
+    ? { minGapSeconds: 0,maxGapSeconds:5, loopPauseSeconds: 2 }
+    :{ minGapSeconds: 1,maxGapSeconds:3 };
+
+  stopTrainPlayback =startPlayback(currentEvents,handleTrainEvent, timing);
 }
 
 async function handleStartButtonClick() {

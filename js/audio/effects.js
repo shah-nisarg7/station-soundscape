@@ -25,7 +25,7 @@ export function createEffects(audioContext,destination){
     const reverb = audioContext.createConvolver();
     reverb.buffer = makeReverbBuffer(audioContext);
     const reverbGain = audioContext.createGain();
-    reverbGain.gain.value = 0.7;
+    reverbGain.gain.value = 0.4;
     input.connect(reverb);
     reverb.connect(reverbGain);
     reverbGain.connect(destination);

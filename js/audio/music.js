@@ -32,10 +32,13 @@ export function getNoteFromScale(scaleName,stepNumber,rootNote= ROOT_NOTE){
 export function eventToFrequency(event,scaleName = "majorPentatonic"){
     if(event.cancelled) return null;
     const trackNumber = Number.parseInt(event.track,10);
-    const stepNumber = Number.isNaN(trackNumber) ? 0 : trackNumber %NOTES_USED;
+    const stepNumber =
+    typeof event.songStep === "number"
+      ? event.songStep
+      : Number.isNaN(trackNumber)? 0 : trackNumber% NOTES_USED;
 
-    let note = getNoteFromScale(scaleName,stepNumber,MELODY_ROOT_NOTE);
-    if(event.delayMin >= LATE_LIMIT_MINUTES){
+    let note = getNoteFromScale(scaleName, stepNumber,MELODY_ROOT_NOTE);
+    if(event.delayMin >=LATE_LIMIT_MINUTES){
         note-=12;
     }
     return midiToFrequency(note);
