@@ -18,8 +18,15 @@ the arrival and departure of train into music notes, ripples and dots!!!
 - real gaps between the trains are sped up alot to form ambient type music
 
 ## Modes
-/?mode=offline - fake train data
-/?mode=song - fake train data to play song
- (append this after the url)
+- fake train data (https://station-soundscape2.vercel.app/?mode=offline)
+- fake train data to play song (https://station-soundscape2.vercel.app/?mode=song)
 
+
+## Tips to use
+- Use headphones!!! It gives a nice experience for the sound
+- Try different stations, and bright/sad modes
+- Try the song mode, it plays Mary Had a Little Lamb
+
+
+- I made the repo in a very organised manner to keep everything seperate, hence several folders and alot of files
 
