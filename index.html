@@ -17,6 +17,23 @@
         <section class="controls">
       <button id="start-button" type="button">Start sound</button>
       <label class="volume-label">
+              <label class="control-label">
+        Station
+        <select id="station-select">
+          <option value="HKI">Helsinki (HKI)</option>
+          <option value="TPE">Tampere (TPE)</option>
+          <option value="TKU">Turku (TKU)</option>
+          <option value="OUL">Oulu (OUL)</option>
+          <option value="RI">Riihimäki (RI)</option>//i took the names from the website
+        </select>
+      </label>
+      <label class="control-label">
+        Mood
+        <select id="scale-select">
+          <option value="majorPentatonic">Bright (major)</option>
+          <option value="minorPentatonic">Sad (minor)</option>
+        </select>
+      </label>
         Volume
         <input id="volume-slider" type="range" min="0" max="100" value="50" />
       </label>

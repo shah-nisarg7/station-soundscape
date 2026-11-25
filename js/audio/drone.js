@@ -1,7 +1,7 @@
 import { midiToFrequency } from "./music.js";
 
-const DRONE_NOTES  = [48,55];
-const DRONE_VOLUME = 0.05;
+const DRONE_NOTES  = [48,55,60];
+const DRONE_VOLUME = 0.09;
 const FADE_IN_SECONDS = 4;
 
 export function startDrone(audioContext,destination){

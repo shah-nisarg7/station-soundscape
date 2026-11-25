@@ -92,3 +92,21 @@
   border: 1px solid #30363d;
   border-radius: 8px;
 }
+.controls{
+    flex-wrap: wrap;
+    justify-content:center;}
+
+.control-label{
+    display: flex;
+    align-items: center;
+    gap:0.5rem;
+    color: var(--muted);
+}
+select{
+    padding:0.35rem 0.5rem;
+    background: #161b22;
+    color:var(--fg);
+    border: 1px solid #30363d;
+    border-radius:6px;
+    font-size: 0.95rem;
+}

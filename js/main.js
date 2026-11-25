@@ -15,8 +15,12 @@ import { startPlayback } from "./audio/trainPlayer.js";
 const statusEl = document.getElementById('status');
 const startButton = document.getElementById("start-button");
 const volumeSlider = document.getElementById("volume-slider");
+const stationSelect = document.getElementById("station-select");
+const scaleSelect = document.getElementById("scale-select");
 
-const STATION_CODE = "HKI";
+let currentScale = "majorPentatonic";
+
+let currentStation = "HKI";
 //opening the page with offline mode to test offline mode manually
 function getWantedModeFromUrl(){
     const params = new URLSearchParams(window.location.search);
@@ -26,7 +30,7 @@ function getWantedModeFromUrl(){
 //shows live /offline on the page with the event count
 function showStatus(result){
     const modeLabel = result.mode ==="live"?"LIVE":"OFFLINE (fake trains)";
-    statusEl.textContent = `${modeLabel}:${result.events.length} events for ${STATION_CODE}`;
+    statusEl.textContent = `${modeLabel}:${result.events.length} events for ${currentStation}`;
     statusEl.className = `status ${result.mode}`;
     if (result.reason){
         console.log("Why offline : ",result.reason);
@@ -36,7 +40,7 @@ function showStatus(result){
 async function init(){
     statusEl.textContent = "Getting train data..";
     try {
-        const result = await getTrainEvents(STATION_CODE,{
+        const result = await getTrainEvents(currentStation,{
             wantedMode: getWantedModeFromUrl(),
         });
         showStatus(result);
@@ -52,7 +56,7 @@ async function init(){
 // called once for every train event , show it and play tis note
 function handleTrainEvent(event){
       activeParticles.push(createParticle(event, TRACK_COUNT, performance.now()));
-    const frequency = eventToFrequency(event);
+    const frequency = eventToFrequency(event,currentScale);
     if(frequency===null){
         nowPlayingEl.textContent = `Train ${event.trainNumber} cancelled (silent)`;
         return;
@@ -62,19 +66,25 @@ function handleTrainEvent(event){
     nowPlayingEl.textContent = `Train ${event.trainNumber} ${event.kind},  track ${event.track}, ${event.delayMin} mins late`; 
 }
 
-async function handleStartButtonClick(){
-    if(isAudioRunning()){
-        if(stopTrainPlayback) stopTrainPlayback();
-        await pauseAudio();
-        startButton.textContent = "Start Sound";
-    } else {
-        await startAudio();
-        stopTrainPlayback = startPlayback(currentEvents,handleTrainEvent,{
-            minGapSeconds : 1.5,
-            maxGapSeconds : 5,
-        });
-        startButton.textContent= "Pause Sound";
-    }
+//starts the train music usingn current events
+function startTrainMusic() {
+  if (stopTrainPlayback) stopTrainPlayback();
+  stopTrainPlayback = startPlayback(currentEvents, handleTrainEvent, {
+    minGapSeconds:1.5,
+    maxGapSeconds:5,
+  });
+}
+
+async function handleStartButtonClick() {
+  if (isAudioRunning()) {
+    if (stopTrainPlayback) stopTrainPlayback();
+    await pauseAudio();
+    startButton.textContent = "Start sound";
+  } else {
+    await startAudio();
+    startTrainMusic();
+    startButton.textContent = "Pause sound";
+  }
 }
 //i kept volume range 0-1 so dividing it by 100 so it stays bw that range
 function handleVolumeChange(){
@@ -93,7 +103,7 @@ const activeRipples = [];// rings that are spreading right now
 const canvasView = setupCanvas(document.getElementById("viz"));
 
 function redrawCanvas(){
-    drawStationRing(canvasView,STATION_CODE);
+    drawStationRing(canvasView,currentStation);
 }
 window.addEventListener("resize",()=>{
     canvasView.resize();   
@@ -110,7 +120,7 @@ function animationLoop(now){
     removeFinishedItems(activeParticles,isParticleFinished,now);
     removeFinishedItems(activeRipples,isRippleFinished,now);
 
-    drawStationRing(canvasView,STATION_CODE);
+    drawStationRing(canvasView,currentStation);
     drawRipples(canvasView,activeRipples,now);
     drawParticles(canvasView,activeParticles,now);
     requestAnimationFrame(animationLoop)
@@ -118,4 +128,17 @@ function animationLoop(now){
 
 window.addEventListener("resize",()=>canvasView.resize());
 requestAnimationFrame(animationLoop);
+
+//new station so load its trains, restart music if it was playing
+async function handleStationChange(){
+    currentStation = stationSelect.value;
+    await init();
+    if(isAudioRunning()) startTrainMusic();
+}
+
+function handleScaleChange(){
+    currentScale = scaleSelect.value;
+}
+stationSelect.addEventListener("change", handleStationChange);
+scaleSelect.addEventListener("change", handleScaleChange);
 init();

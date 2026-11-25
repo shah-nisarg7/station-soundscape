@@ -4,7 +4,7 @@ const SETTINGS = {
     holdSeconds: 1.0, //time for full loudness
     releaseSeconds: 3.0, //time to fade out
     peakVolume : 0.15,//keeping it low for now, will test
-    filterFrequency: 1200, //sounds above this get softened
+    filterFrequency: 2000, //sounds above this get softened
 }
 export function getEnvelopeTimes(startTime,settings=SETTINGS){
     const peakTime = startTime + settings.attackSeconds;

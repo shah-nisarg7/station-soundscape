@@ -4,7 +4,7 @@ export const SCALES = {
     minorPentatonic: [0,3,5,7,10], //major usually sounds slightly sad/off
 };
 
-const ROOT_NOTE = 48; // note 48 is the middle c (C3 note) on piano
+const MELODY_ROOT_NOTE = 60; // note 60 is the higher c (C4 note) on piano
 const LATE_LIMIT_MINUTES =5; //5 min or more counts as late
 const NOTES_USED =5; //only 5 diff notes (one actave) so jump stays small
 
@@ -34,7 +34,7 @@ export function eventToFrequency(event,scaleName = "majorPentatonic"){
     const trackNumber = Number.parseInt(event.track,10);
     const stepNumber = Number.isNaN(trackNumber) ? 0 : trackNumber %NOTES_USED;
 
-    let note = getNoteFromScale(scaleName,stepNumber);
+    let note = getNoteFromScale(scaleName,stepNumber,MELODY_ROOT_NOTE);
     if(event.delayMin >= LATE_LIMIT_MINUTES){
         note-=12;
     }
