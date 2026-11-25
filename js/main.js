@@ -77,7 +77,7 @@ function handleTrainEvent(event){
         nowPlayingEl.textContent = `Train ${event.trainNumber} cancelled (silent)`;
         return;
     }
-    playNote(frequency, event.songStep === undefined ? undefined : SONG_VOICE);
+    playNote(frequency, SONG_VOICE);
     activeRipples.push(createRipple(event, TRACK_COUNT, performance.now()));
     nowPlayingEl.textContent = `Train ${event.trainNumber} ${event.kind},  track ${event.track}, ${event.delayMin} mins late`; 
 }
@@ -88,7 +88,13 @@ function startTrainMusic() {
   const isSong =currentEvents.length> 0 &&currentEvents[0].songStep !== undefined;
   const timing = isSong
     ? { minGapSeconds: 0,maxGapSeconds:5, loopPauseSeconds: 2 }
-    :{ minGapSeconds: 1,maxGapSeconds:3 };
+    : {
+        secondsPerRealMinute: 0.3, //1 real minute = 0.3 seconds of music
+        minGapSeconds: 0.3,
+        maxGapSeconds: 1.2,
+        beatSeconds: 0.3, 
+        loopPauseSeconds: 2,
+      };
 
   stopTrainPlayback =startPlayback(currentEvents,handleTrainEvent, timing);
 }
